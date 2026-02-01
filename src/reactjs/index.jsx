@@ -4,4 +4,4 @@ window.React= {createElement:createElement, Fragment:Fragment}; // needed in the
 import { createRoot } from "react-dom/client";
 
 // mount the app in the browser page. Test at http://localhost:8080/react.html
-createRoot(document.getElementById('TODO')).render("Hello React world!");
+createRoot(document.getElementById('root')).render("Hello React world!");
