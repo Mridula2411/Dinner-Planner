@@ -8,25 +8,29 @@ export const model = {
     currentDishId: null,  // null means "intentionally empty"
 
     setCurrentDishId(dishId){
-        // this.someProperty= someValue
+        this.currentDishId = dishId;
     },
     
     setNumberOfGuests(number){
-
+        const n = Number(number);
+        if (!Number.isInteger(n) || n < 1) {
+            throw new Error("number of guests not a positive integer");
+        }
+        this.numberOfGuests = n;
     },
     
     addToMenu(dishToAdd){
         // array spread syntax exercise
         // It sets this.dishes to a new array [   ] where we spread (...) the elements of the existing this.dishes
-        this.dishes= [...this.dishes, /* replace this comment */];
+        this.dishes = [...this.dishes, dishToAdd];
     },
 
     // filter callback exercise
     removeFromMenu(dishToRemove){
         function shouldWeKeepDishCB(dish){
-            
+            return dish.id !== dishToRemove.id;
         }
-        this.dishes= this.dishes.filter(/* pass the callback */);
+        this.dishes = this.dishes.filter(shouldWeKeepDishCB);
     },
     
  

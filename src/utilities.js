@@ -1,28 +1,76 @@
 /* uncomment the export below to enable the 1.1.2 test suite! */
-/* export */ function compareIngredientsCB(ingredientA, ingredientB){
-    return // TODO
+export function compareIngredientsCB(ingredientA, ingredientB){
+  if (ingredientA.aisle < ingredientB.aisle){
+    return -1
+  }
+  if (ingredientA.aisle > ingredientB.aisle){
+    return 1
+  }
+  if (ingredientA.name < ingredientB.name){
+    return -1
+  }
+  if (ingredientA.name > ingredientB.name){
+    return 1
+  }
+  return 0
+    
 }
 
 export function sortIngredients(ingredients){
-    return // TODO
+    const copy = [...ingredients];
+    return copy.sort(compareIngredientsCB);
 }
 
-/* export */ function isKnownTypeCB(type){
-    // don't forget the return keyword (goes for all functions below)
+export function isKnownTypeCB(type){
+  return type === "starter" || type === "main course" || type === "dessert";
 }
 
 export function dishType(dish){
+  if (!dish || !Array.isArray(dish.dishTypes)) {
+    return "";
+  } else {
+    const found = dish.dishTypes.find(isKnownTypeCB);
+    if (found) {
+      return found;
+    } else {
+      return "";
+    }
+  }
 }
 
-/* export */ function compareDishesCB(dishA, dishB){
+export function compareDishesCB(dishA, dishB){
+  const order = {
+    "": 0,
+    "starter": 1,
+    "main course": 2,
+    "dessert": 3
+  };
+  const typeA = dishType(dishA);
+  const typeB = dishType(dishB);
+  return order[typeA] - order[typeB];
 }
 
 
 export function sortDishes(dishes){
+  const copy = Array.isArray(dishes) ? [...dishes] : [];
+  return copy.sort(compareDishesCB);
 }
 
-/*export */ function menuPrice(dishesArray){
- 
+export function sumReducerCB(resultSoFar, number){
+  return resultSoFar + number;
+}
+
+export function dishPriceCB(dish){
+  if (!dish) return 0;
+  // prefer explicit numeric price fields, fall back to 0
+  const p = dish.price ?? dish.pricePerServing ?? 0;
+  return typeof p === "number" && !Number.isNaN(p) ? p : Number(p) || 0;
+}
+
+export function menuPrice(dishesArray){
+  if (!Array.isArray(dishesArray)) return 0;
+  // map each dish to its price, then sum using reduce with initial accumulator 0
+  return dishesArray.map(dishPriceCB).reduce(sumReducerCB, 0);
 }
 
 /* 
@@ -33,8 +81,8 @@ export function sortDishes(dishes){
    
    As this is not an algorithm course, the function is mostly written but you have 2 callback passing TODOs.
 */
-function shoppingList(dishes){
-    const result={}; // object used as mapping between ingredient ID and ingredient object
+export function shoppingList(dishes){
+    const result = {};
 
     // we define the callback inside the function, though this is not strictly needed in this case. But see below.
     function keepJustIngredientsCB(dish){
@@ -63,9 +111,12 @@ function shoppingList(dishes){
         }
     }
 
-    const arrayOfIngredientArrays= dishes.map(/*TODO pass the callback that transforms a dish to its ingredients */);
-    const allIngredients= arrayOfIngredientArrays.flat();    
-    allIngredients.forEach(/* TODO: pass the callback that treats an ingredient */);
+    const arrayOfIngredientArrays = Array.isArray(dishes)
+        ? dishes.map(keepJustIngredientsCB)
+        : [];
+
+    const allIngredients = arrayOfIngredientArrays.flat();
+    allIngredients.forEach(ingredientCB);
 
     // Note: the 3 lines above can be written as a function chain:
     // dishes.map(callback1).flat().forEach(callback2);
@@ -73,4 +124,3 @@ function shoppingList(dishes){
     // now we transform the result object into an array: we drop the keys and only keep the values
     return Object.values(result);
 }
-
