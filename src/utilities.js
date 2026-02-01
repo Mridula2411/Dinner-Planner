@@ -56,21 +56,13 @@ export function sortDishes(dishes){
   return copy.sort(compareDishesCB);
 }
 
-export function sumReducerCB(resultSoFar, number){
-  return resultSoFar + number;
+export function sumReducerCB(total, dish) {
+  return total + (dish.price ?? dish.pricePerServing ?? 0);
 }
 
-export function dishPriceCB(dish){
-  if (!dish) return 0;
-  // prefer explicit numeric price fields, fall back to 0
-  const p = dish.price ?? dish.pricePerServing ?? 0;
-  return typeof p === "number" && !Number.isNaN(p) ? p : Number(p) || 0;
-}
-
-export function menuPrice(dishesArray){
-  if (!Array.isArray(dishesArray)) return 0;
-  // map each dish to its price, then sum using reduce with initial accumulator 0
-  return dishesArray.map(dishPriceCB).reduce(sumReducerCB, 0);
+// menuPrice uses the named reducer
+export function menuPrice(dishes) {
+  return dishes.reduce(sumReducerCB, 0);
 }
 
 /* 
