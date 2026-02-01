@@ -3,11 +3,23 @@ import { SidebarView } from "/src/views/sidebarView.jsx";
 
 const Sidebar = observer(
     function SidebarRender(props) {
+        function onNumberChangeACB(newNumber){
+            props.model.setNumberOfGuests(newNumber);
+        }
+
+        function onRemoveDishACB(dish){
+            props.model.removeFromMenu(dish);
+        }
+
+        function onDishInterestACB(dish){
+    props.model.setCurrentDishId(dish.id);
+        }
         return <SidebarView 
             number={props.model.numberOfGuests}
             dishes={props.model.dishes}
-            onNumberChange={console.log}
-            onRemoveDish={console.log}
+            onNumberChange={onNumberChangeACB}
+            onRemoveDish={onRemoveDishACB}
+            onDishLink={onDishInterestACB}
         />;
     }
 );
