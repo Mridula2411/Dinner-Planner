@@ -2,3 +2,6 @@
 .debug {
     border-style:solid;
 }
+.Quantity {
+    text-align: right;
+}
