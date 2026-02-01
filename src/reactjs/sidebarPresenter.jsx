@@ -6,6 +6,8 @@ const Sidebar = observer(
         return <SidebarView 
             number={props.model.numberOfGuests}
             dishes={props.model.dishes}
+            onNumberChange={console.log}
+            onRemoveDish={console.log}
         />;
     }
 );
