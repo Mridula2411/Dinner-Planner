@@ -8,15 +8,31 @@ export const Search = observer(function Search(props){
     const model = props.model;
     const promiseState = model.searchResultsPromiseState || {};
 
+    function onTextChangeACB(text) {
+        model.setSearchQuery(text);
+    }
+
+    function onTypeChangeACB(type) {
+        model.setSearchType(type);
+    }
+
+    function onDoSearchACB() {
+        model.doSearch(model.searchParams);
+    }
+
+    function onDishClickACB(dish) {
+        model.setCurrentDishId(dish.id);
+    }
+
     return (
         <>
             <SearchFormView
                 dishTypeOptions={["starter", "main course", "dessert"]}
                 text={model.searchParams.query || ""}
                 type={model.searchParams.type || ""}
-                onTextChange={console.log}
-                onTypeChange={console.log}
-                onDoSearch={console.log}
+                onTextChange={onTextChangeACB}
+                onTypeChange={onTypeChangeACB}
+                onDoSearch={onDoSearchACB}
             />
 
             {
@@ -24,9 +40,7 @@ export const Search = observer(function Search(props){
                 ? (
                     <SearchResultsView
                         searchResults={promiseState.data}
-                        onDishClick={function(dish) {
-                            console.log("Dish clicked:", dish);
-                        }}
+                        onDishClick={onDishClickACB}
                     />
                   )
                 : (
