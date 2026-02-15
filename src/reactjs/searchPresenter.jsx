@@ -14,6 +14,9 @@ export const Search = observer(function Search(props){
                 dishTypeOptions={["starter", "main course", "dessert"]}
                 text={model.searchParams.query || ""}
                 type={model.searchParams.type || ""}
+                onTextChange={console.log}
+                onTypeChange={console.log}
+                onDoSearch={console.log}
             />
 
             {
