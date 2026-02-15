@@ -8,7 +8,7 @@ export const reactiveModel=observable(model);
 
 
 
-
+reactiveModel.doSearch({});
 // ------ for Lab debug purposes ----------
 // making the reactive model available at the browser JavasScript Console
 window.myModel= reactiveModel;

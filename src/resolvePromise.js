@@ -1,24 +1,19 @@
 export function resolvePromise(prms, promiseState) {
+    promiseState.promise= prms;
+    promiseState.data= null;
+    promiseState.error= null;
+    
+    if(!prms) { return; } // check if prms is falsy
 
-    promiseState.promise = prms;
-    promiseState.data = null;
-    promiseState.error = null;
+    prms.then(resolvedACB).catch(rejectedACB);
 
-    if (!prms) {
-        return;
+    function resolvedACB(result) {
+        if (promiseState.promise!== prms) return; // solve race condition
+        promiseState.data= result;
     }
 
-    function successACB(result) {
-        if (promiseState.promise === prms) {
-            promiseState.data = result;
-        }
+    function rejectedACB(result) {
+        if (promiseState.promise!== prms) return;
+        promiseState.error= result;
     }
-
-    function failureACB(error) {
-        if (promiseState.promise === prms) {
-            promiseState.error = error;
-        }
-    }
-
-    prms.then(successACB).catch(failureACB);
 }
