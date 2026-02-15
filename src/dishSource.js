@@ -73,3 +73,11 @@ export function getMenuDetails(ids_array) {
     })
     .then(responseACB);
 }
+export function getDishDetails(id) {
+
+    function arrayToDishACB(dishArray) {
+        return dishArray[0];
+    }
+
+    return getMenuDetails([id]).then(arrayToDishACB);
+}
