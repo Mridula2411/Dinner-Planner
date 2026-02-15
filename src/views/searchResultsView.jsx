@@ -23,7 +23,7 @@ export function SearchResultsView(props) {
                     >
                         <img
                             src={dish.image}
-                            height={150}
+                            height={100}
                             alt={dish.title}
                         />
                         <div>{dish.title}</div>

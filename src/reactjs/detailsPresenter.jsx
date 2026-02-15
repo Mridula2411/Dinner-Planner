@@ -17,6 +17,9 @@ export const Details = observer(function Details(props){
                 dishData={promiseState.data}
                 guests={model.numberOfGuests}
                 isDishInMenu={isDishInMenu}
+                onAddToMenu={function() {
+                    console.log("Add to menu clicked!");
+                }}
             />
         );
     }
