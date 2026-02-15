@@ -32,9 +32,11 @@ export const model = {
     },
 
     removeFromMenu(dishToRemove){
-        this.dishes = this.dishes.filter(function(dish){
+        function shouldWeKeepDishCB(dish){
+            
             return dish.id !== dishToRemove.id;
-        });
+        }
+        this.dishes = this.dishes.filter(shouldWeKeepDishCB);
     },
 
     setSearchQuery(query){
