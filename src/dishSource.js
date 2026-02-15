@@ -42,3 +42,34 @@ export function searchDishes(searchParams) {
     .then(responseACB)
     .then(keepResultsACB);
 }
+export function getMenuDetails(ids_array) {
+
+    ids_array = ids_array || [];
+
+    var params = {
+        ids: ids_array
+    };
+
+    var queryString = new URLSearchParams(params).toString();
+    var url = PROXY_URL + "/recipes/informationBulk";
+
+    if (queryString) {
+        url = url + "?" + queryString;
+    }
+
+    function responseACB(response) {
+        if (response.status !== 200) {
+            throw new Error("HTTP error: " + response.status);
+        }
+        return response.json();
+    }
+
+    return fetch(url, {
+        method: "GET",
+        headers: {
+            "X-DH2642-Key": PROXY_KEY,
+            "X-DH2642-Group": "396"
+        }
+    })
+    .then(responseACB);
+}
