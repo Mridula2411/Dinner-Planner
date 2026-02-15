@@ -1,16 +1,19 @@
-import { searchDishes } from "/src/dishSource.js";
+import { searchDishes, getDishDetails } from "/src/dishSource.js";
 import { resolvePromise } from "/src/resolvePromise.js";
+
 /* 
-   The Model keeps the state of the application (Application State). 
+   The Model keeps the state of the application (Application State).
    It is an abstract object, i.e. it knows nothing about graphics and interaction.
 */
+
 export const model = {  
     numberOfGuests: 2,
     dishes: [],
-    currentDishId: null,  // null means "intentionally empty"
+    currentDishId: null,   // null means intentionally empty
 
     searchParams: {},
     searchResultsPromiseState: {},
+    currentDishPromiseState: {},
 
     setCurrentDishId(dishId){
         this.currentDishId = dishId;
@@ -29,10 +32,9 @@ export const model = {
     },
 
     removeFromMenu(dishToRemove){
-        function shouldWeKeepDishCB(dish){
+        this.dishes = this.dishes.filter(function(dish){
             return dish.id !== dishToRemove.id;
-        }
-        this.dishes = this.dishes.filter(shouldWeKeepDishCB);
+        });
     },
 
     setSearchQuery(query){
@@ -43,11 +45,25 @@ export const model = {
         this.searchParams.type = type;
     },
 
-    doSearch(params) {
-    resolvePromise(
-        searchDishes(params),
-        this.searchResultsPromiseState
-    );
-},
+    doSearch(params){
+        resolvePromise(
+            searchDishes(params),
+            this.searchResultsPromiseState
+        );
+    },
+    
+    currentDishEffect(){
+        if(!this.currentDishId){
+            resolvePromise(
+                undefined,
+                this.currentDishPromiseState
+            );
+            return;
+        }
 
+        resolvePromise(
+            getDishDetails(this.currentDishId),
+            this.currentDishPromiseState
+        );
+    }
 };
