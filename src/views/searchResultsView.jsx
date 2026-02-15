@@ -1,3 +1,3 @@
-export function RestultsView(props){
-    return "__ResultsView__";
+export function SearchResultsView (props){
+    return "__SearchResultsView__";
 }

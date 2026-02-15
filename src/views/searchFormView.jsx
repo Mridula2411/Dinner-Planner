@@ -1,3 +1,3 @@
-export function FormView(props){
-    return "__FormView__";
+export function SearchFormView(props){
+    return "__SearchFormView__";
 }
