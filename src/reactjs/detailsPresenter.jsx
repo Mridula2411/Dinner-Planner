@@ -4,11 +4,27 @@ import { SuspenseView } from "../views/suspenseView.jsx";
 
 export const Details = observer(function Details(props){
 
-    const promiseState = props.model.currentDishPromiseState || {};
+    const model = props.model;
+    const promiseState = model.currentDishPromiseState || {};
 
     if(promiseState.data){
-        return <DetailsView />;
+        const isDishInMenu = model.dishes.find(function findDishCB(dish) {
+            return dish.id === promiseState.data.id;
+        }) !== undefined;
+
+        return (
+            <DetailsView
+                dishData={promiseState.data}
+                guests={model.numberOfGuests}
+                isDishInMenu={isDishInMenu}
+            />
+        );
     }
 
-    return <SuspenseView />;
+    return (
+        <SuspenseView
+            promise={promiseState.promise}
+            error={promiseState.error}
+        />
+    );
 });

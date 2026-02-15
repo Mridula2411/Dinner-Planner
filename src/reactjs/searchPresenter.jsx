@@ -24,6 +24,7 @@ export const Search = observer(function Search(props){
                 ? (
                     <SearchResultsView
                         searchResults={promiseState.data}
+                        onDishClick={console.log}
                     />
                   )
                 : (
