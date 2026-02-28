@@ -2,6 +2,30 @@
 .debug {
     border-style:solid;
 }
+
 .Quantity {
     text-align: right;
+}
+
+/* Responsive layout: side-by-side on wider screens, stacked on narrow screens */
+@media (min-width: 600px) {
+    .flexParent {
+        display: flex;
+        flex-direction: row;
+        height: 100vh;
+    }
+
+    .sidebar {
+        flex: 0 0 auto;
+        width: 300px;
+        overflow-y: auto;
+        height: 100vh;
+    }
+
+    .mainContent {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        height: 100vh;
+        padding: 10px;
+    }
 }

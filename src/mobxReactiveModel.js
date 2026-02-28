@@ -1,6 +1,7 @@
 import "/src/teacherFetch.js"; // protection against fetch() in infinite loops
 import { observable, configure, reaction } from "mobx";
 import{model} from "/src/DinnerModel.js";
+import {connectToPersistence} from "/src/firestoreModel.js";
 configure({ enforceActions: "never", });  // we don't use Mobx actions in the Lab
 
 export const reactiveModel=observable(model);
@@ -15,6 +16,9 @@ reaction(
 );
 
 reactiveModel.doSearch({});
+
+// Connect to Firebase Firestore persistence
+connectToPersistence(reactiveModel, reaction);
 
 // ------ for Lab debug purposes ----------
 // making the reactive model available at the browser JavasScript Console
