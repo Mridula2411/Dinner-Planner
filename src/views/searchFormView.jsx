@@ -11,6 +11,10 @@ export function SearchFormView(props) {
     function onSearchACB(){
         props.onDoSearch && props.onDoSearch();
     }
+    
+    function onSummaryACB(){
+        window.location.hash = "#/summary";
+    }
 
     return (
         <div>
@@ -39,6 +43,10 @@ export function SearchFormView(props) {
 
             <button onClick={onSearchACB}>
                 Search!
+            </button>
+            
+            <button onClick={onSummaryACB}>
+                Summary
             </button>
         </div>
     );

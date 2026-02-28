@@ -4,6 +4,7 @@ import { Sidebar } from "./sidebarPresenter.jsx";
 import { Summary } from "./summaryPresenter.jsx";
 import { SuspenseView } from "/src/views/suspenseView.jsx";
 import { observer } from "mobx-react-lite";
+import { RouterProvider, createBrowserRouter, createHashRouter } from "react-router-dom";
 
 const ReactRoot = observer(function ReactRoot(props){
     // Show SuspenseView while model is not ready (loading from persistence)
@@ -11,12 +12,30 @@ const ReactRoot = observer(function ReactRoot(props){
         return <SuspenseView promise={true} />;
     }
     
+    // Create router with routes
+    const router = createHashRouter([
+        {
+            path: "/",
+            element: <Search model={props.model} />
+        },
+        {
+            path: "/search",
+            element: <Search model={props.model} />
+        },
+        {
+            path: "/details",
+            element: <Details model={props.model} />
+        },
+        {
+            path: "/summary",
+            element: <Summary model={props.model} />
+        }
+    ]);
+    
     return (<div className="flexParent">
                 <div className="sidebar"><Sidebar model={props.model} /></div>
                 <div className="mainContent">
-                    <Summary model={props.model} />
-                    <Search model={props.model}/>
-                    <Details model={props.model}/>
+                    <RouterProvider router={router} />
                 </div>
             </div>
            );

@@ -4,11 +4,13 @@ import "/src/style.css"
 
 /* Functional JSX component. Name must start with capital letter */
 export function SummaryView(props){
+    function onBackToSearchACB() {
+        window.location.hash = "#/search";
+    }
+    
     return (
             <div className="debug">
-
-  
-
+              <button onClick={onBackToSearchACB} style={{float: "right"}}>Back to search!</button>
 
               {/* TW 1.2 note the syntax: {JS_expression_or_comment} */}
             Summary for <span title="nr guests">{props.people}</span>{props.people===1? " person" : " persons"}:

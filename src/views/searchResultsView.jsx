@@ -6,6 +6,7 @@ export function SearchResultsView(props) {
                     if (props.onDishClick) {
                         props.onDishClick(dish);
                     }
+                    window.location.hash = "#/details";
                 }
 
                 return (

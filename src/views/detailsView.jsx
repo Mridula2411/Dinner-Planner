@@ -7,6 +7,11 @@ export function DetailsView(props) {
         if (props.onAddToMenu) {
             props.onAddToMenu();
         }
+        window.location.hash = "#/search";
+    }
+    
+    function onCancelACB() {
+        window.location.hash = "#/search";
     }
 
     return (
@@ -63,7 +68,7 @@ export function DetailsView(props) {
                 >
                     Add to menu
                 </button>
-                <button>
+                <button onClick={onCancelACB}>
                     Cancel
                 </button>
             </div>

@@ -52,6 +52,7 @@ export function SidebarView(props){
         if(props.onDishLink) {
             props.onDishLink(dish);
         }
+        window.location.hash = "#/details";
     }
     return (
         <tr key={dish.id}>
