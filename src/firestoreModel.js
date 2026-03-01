@@ -14,7 +14,7 @@ window.setDoc= setDoc
 
 
 /* Replace NN with your TW2_TW3 group number! */
-const COLLECTION="dinnerModelNN"; // TODO: Replace NN with your group number
+const COLLECTION="dinnerModelNN";
 const DOCUMENT_NAME="modelData";
 
 // TODO: read the code above
