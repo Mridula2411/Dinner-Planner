@@ -40,6 +40,7 @@ export const Search = observer(function Search(props){
                 ? (
                     <SearchResultsView
                         searchResults={promiseState.data}
+                        menuDishIds={Array.isArray(model.dishes) ? model.dishes.map(d => d.id) : []}
                         onDishClick={onDishClickACB}
                     />
                   )

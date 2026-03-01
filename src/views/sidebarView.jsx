@@ -13,21 +13,25 @@ export function SidebarView(props){
 
     return (
         <div>
-            <button
-                disabled={props.number === 1}
-                onClick={onMinusACB}
-            >
-                -
-            </button>
-
-            {props.number}
-
-            <button onClick={onPlusACB}>+</button>
-
+            <div className="guestControls">
+                <strong>Guests</strong>
+                <div>
+                    <button
+                        className="secondaryButton"
+                        disabled={props.number === 1}
+                        onClick={onMinusACB}
+                        aria-label="Decrease number of guests"
+                    >
+                        -
+                    </button>
+                    <span className="guestCount"> {props.number} </span>
+                    <button className="secondaryButton" onClick={onPlusACB} aria-label="Increase number of guests">+</button>
+                </div>
+                <small>Use + and - to change servings for all dishes.</small>
+            </div>
             <table>
                 <tbody>
                     {sortDishes([...props.dishes]).map(dishTableRowCB)}
-
                     <tr>
                         <td></td>
                         <td>Total:</td>
@@ -57,10 +61,10 @@ export function SidebarView(props){
     return (
         <tr key={dish.id}>
             <td>
-                <button onClick={onRemoveDishACB}>X</button>
+                <button className="dangerButton" onClick={onRemoveDishACB} title="Remove from menu">x</button>
             </td>
             <td>
-                <a href="#" onClick={onDishLinkACB}>{dish.title}</a>
+                <a href="#" onClick={onDishLinkACB} className="dishLink">{dish.title}</a>
             </td>
             <td>{dishType(dish)}</td>
             <td className="Quantity">
