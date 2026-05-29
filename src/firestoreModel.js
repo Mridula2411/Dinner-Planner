@@ -1,6 +1,6 @@
 // initialize Firebase app
 import { initializeApp } from "firebase/app";
-import {getFirestore, doc, setDoc, getDoc} from "firebase/firestore";
+import {getFirestore, doc, setDoc, getDoc, onSnapshot} from "firebase/firestore";
 
 // uncomment the following lines when you have your firebaseConfig. Understand what the lines are doing!
 import {firebaseConfig} from "/src/firebaseConfig.js";
@@ -28,6 +28,9 @@ export function connectToPersistence(model, watchFunction) {
     // Create document reference once to reuse for both reading and writing
     const firestoreDoc = doc(db, COLLECTION, DOCUMENT_NAME);
     
+    // Flag to track when we're updating from Firestore to avoid triggering saves
+    let isUpdatingFromFirestore = false;
+    
     // Set up a side effect that persists the model whenever important properties change
     watchFunction(
         function trackModelChangesACB() {
@@ -35,9 +38,9 @@ export function connectToPersistence(model, watchFunction) {
             return [model.numberOfGuests, model.dishes, model.currentDishId];
         },
         function saveModelToFirestoreACB() {
-            console.log("Save triggered, model.ready:", model.ready);
-            // Only save if model.ready is true to avoid infinite loops during model initialization
-            if (!model.ready) return;
+            console.log("Save triggered, model.ready:", model.ready, "isUpdatingFromFirestore:", isUpdatingFromFirestore);
+            // Only save if model.ready is true AND we're not updating from Firestore
+            if (!model.ready || isUpdatingFromFirestore) return;
             
             console.log("Saving to Firestore:", {
                 numberOfGuests: model.numberOfGuests,
@@ -85,6 +88,33 @@ export function connectToPersistence(model, watchFunction) {
             // Set model.ready to true as the last thing (model is now ready for normal operation)
             console.log("Setting model.ready to true");
             model.ready = true;
+            
+            // Set up real-time listener for changes from other windows/clients
+            onSnapshot(firestoreDoc, function onFirestoreUpdateACB(docSnapshot) {
+                if (!docSnapshot.exists) {
+                    console.log("Document deleted in Firestore");
+                    return;
+                }
+                
+                const data = docSnapshot.data();
+                console.log("Real-time update from Firestore:", data);
+                
+                // Set flag to prevent triggering saves during update
+                isUpdatingFromFirestore = true;
+                
+                // Update model with new data from Firestore
+                if (data) {
+                    model.numberOfGuests = data.numberOfGuests ?? model.numberOfGuests;
+                    model.dishes = data.dishes ?? model.dishes;
+                    model.currentDishId = data.currentDishId ?? model.currentDishId;
+                }
+                
+                // Reset flag after update
+                isUpdatingFromFirestore = false;
+                console.log("Real-time update applied to model");
+            }, function onErrorACB(error) {
+                console.error("Error in real-time listener:", error);
+            });
         })
         .catch(function getDocErrorACB(error) {
             console.error("Error reading from Firestore:", error);

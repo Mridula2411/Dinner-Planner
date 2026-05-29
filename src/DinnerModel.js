@@ -10,8 +10,6 @@ export const model = {
     numberOfGuests: 2,
     dishes: [],
     currentDishId: null,   // null means intentionally empty
-    user: undefined,       // undefined while auth initializes, null when signed out, object when signed in
-    ready: false,
 
     searchParams: {},
     searchResultsPromiseState: {},
