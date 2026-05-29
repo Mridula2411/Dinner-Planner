@@ -41,13 +41,31 @@ export const model = {
 
     setSearchQuery(query){
         this.searchParams.query = query;
+        this.scheduleSearch();
     },
 
     setSearchType(type){
         this.searchParams.type = type;
+        this.scheduleSearch();
+    },
+
+    scheduleSearch(){
+        if (this._searchTimer) {
+            clearTimeout(this._searchTimer);
+        }
+
+        this._searchTimer = setTimeout(() => {
+            this.doSearch(this.searchParams);
+            this._searchTimer = null;
+        }, 1000);
     },
 
     doSearch(params){
+        if (this._searchTimer) {
+            clearTimeout(this._searchTimer);
+            this._searchTimer = null;
+        }
+
         resolvePromise(
             searchDishes(params),
             this.searchResultsPromiseState
