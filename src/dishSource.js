@@ -14,6 +14,14 @@ export function searchDishes(searchParams) {
         params.query = searchParams.query;
     }
 
+    if (searchParams.offset !== undefined) {
+        params.offset = searchParams.offset;
+    }
+
+    if (searchParams.number !== undefined) {
+        params.number = searchParams.number;
+    }
+
     var queryString = new URLSearchParams(params).toString();
     var url = PROXY_URL + "/recipes/complexSearch";
 

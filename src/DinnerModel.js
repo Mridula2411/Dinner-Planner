@@ -12,8 +12,10 @@ export const model = {
     currentDishId: null,   // null means intentionally empty
 
     searchParams: {},
+    searchOffset: 0,
     searchResultsPromiseState: {},
     currentDishPromiseState: {},
+    loadMorePromiseState: {},
 
     setCurrentDishId(dishId){
         this.currentDishId = dishId;
@@ -54,9 +56,11 @@ export const model = {
             clearTimeout(this._searchTimer);
         }
 
-        this._searchTimer = setTimeout(() => {
-            this.doSearch(this.searchParams);
-            this._searchTimer = null;
+        const self = this;
+        this._searchTimer = setTimeout(function scheduleSearchTimeoutACB() {
+            const paramsWithPagination = {...self.searchParams, offset: 0, number: 10};
+            self.doSearch(paramsWithPagination);
+            self._searchTimer = null;
         }, 1000);
     },
 
@@ -66,9 +70,20 @@ export const model = {
             this._searchTimer = null;
         }
 
+        this.searchOffset = 0;
         resolvePromise(
             searchDishes(params),
             this.searchResultsPromiseState
+        );
+    },
+
+    loadMoreResults(){
+        if (!this.searchResultsPromiseState.data) return;
+        
+        this.searchOffset += 10;
+        resolvePromise(
+            searchDishes({...this.searchParams, offset: this.searchOffset, number: 10}),
+            this.loadMorePromiseState
         );
     },
     

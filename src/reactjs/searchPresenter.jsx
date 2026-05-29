@@ -24,6 +24,20 @@ export const Search = observer(function Search(props){
         model.setCurrentDishId(dish.id);
     }
 
+    function onScrollACB(evt) {
+        const container = evt.target;
+        const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 100;
+        
+        if (isNearBottom && promiseState.data && !model.loadMorePromiseState.promise) {
+            model.loadMoreResults();
+        }
+    }
+
+    const allResults = promiseState.data ? [
+        ...promiseState.data,
+        ...(model.loadMorePromiseState && model.loadMorePromiseState.data ? model.loadMorePromiseState.data : [])
+    ] : [];
+
     return (
         <>
             <SearchFormView
@@ -35,21 +49,29 @@ export const Search = observer(function Search(props){
                 onDoSearch={onDoSearchACB}
             />
 
-            {
-                promiseState.data
-                ? (
-                    <SearchResultsView
-                        searchResults={promiseState.data}
-                        onDishClick={onDishClickACB}
-                    />
-                  )
-                : (
-                    <SuspenseView
-                        promise={promiseState.promise}
-                        error={promiseState.error}
-                    />
-                  )
-            }
+            <div
+                onScroll={onScrollACB}
+                style={{
+                    overflowY: "auto",
+                    height: "500px"
+                }}
+            >
+                {
+                    allResults.length > 0
+                    ? (
+                        <SearchResultsView
+                            searchResults={allResults}
+                            onDishClick={onDishClickACB}
+                        />
+                      )
+                    : (
+                        <SuspenseView
+                            promise={promiseState.promise}
+                            error={promiseState.error}
+                        />
+                      )
+                }
+            </div>
         </>
     );
-});
+});;
