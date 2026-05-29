@@ -2,7 +2,7 @@ import { Search } from "./searchPresenter.jsx";
 import { Details } from "./detailsPresenter.jsx";
 import { Sidebar } from "./sidebarPresenter.jsx";
 import { Summary } from "./summaryPresenter.jsx";
-import { SuspenseView } from "/src/views/suspenseView.jsx";
+import { SuspenseView } from "/src/views/suspenseView";
 import { observer } from "mobx-react-lite";
 import { RouterProvider, createBrowserRouter, createHashRouter } from "react-router-dom";
 

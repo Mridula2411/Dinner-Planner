@@ -1,5 +1,5 @@
 // un-comment when needed:
-import {sortIngredients} from "/src/utilities.js";
+import {sortIngredients} from "/src/utilities";
 import "/src/style.css"
 
 /* Functional JSX component. Name must start with capital letter */
@@ -43,7 +43,7 @@ export function SummaryView(props){
     /* callback for Array Rendering in TW 1.3 */
     function ingredientTableRowCB(ingr){
         // console.log(ingr);
-        return <tr key={ /* Reflect on what's a key in array rendering! */ ingr.id } >
+        return <tr key={ /* Reflect on what's a key in array rendering! */ ingr.id } data-key={ingr.id}>
                  <td>{ingr.name}</td>
                  <td>{ingr.aisle}</td>
                  <td className="Quantity">{(ingr.amount*props.people).toFixed(2)}</td>

@@ -12,6 +12,7 @@ export function SearchResultsView(props) {
                 return (
                     <span
                         key={dish.id}
+                        data-key={dish.id}
                         onClick={onDishClickACB}
                         style={{
                             display: "inline-block",

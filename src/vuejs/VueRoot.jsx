@@ -1,11 +1,15 @@
-import { Summary }  from "./summaryPresenter.jsx";
-
+import { Summary } from "./summaryPresenter.jsx";
 
 function VueRoot(props){
-    return (<div>
-                <div><Summary model={props.model} /></div>
-            </div>
-           );
+    return window.React.createElement(
+        "div",
+        null,
+        window.React.createElement(
+            "div",
+            null,
+            window.React.createElement(Summary, { model: props.model })
+        )
+    );
 }
 
 export { VueRoot }

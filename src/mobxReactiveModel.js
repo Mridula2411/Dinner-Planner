@@ -1,7 +1,7 @@
 import "/src/teacherFetch.js"; // protection against fetch() in infinite loops
 import { observable, configure, reaction } from "mobx";
-import{model} from "/src/DinnerModel.js";
-import {connectToPersistence} from "/src/firestoreModel.js";
+import{model} from "/src/DinnerModel";
+import {connectToPersistence} from "/src/firestoreModel";
 configure({ enforceActions: "never", });  // we don't use Mobx actions in the Lab
 
 export const reactiveModel=observable(model);
@@ -25,7 +25,7 @@ connectToPersistence(reactiveModel, reaction);
 window.myModel= reactiveModel;
 
 // making some example dishes available 
-import {dishesConst} from "/src/dishesConst.js";
+import {dishesConst} from "/src/dishesConst";
 window.dishesConst= dishesConst;
 
 //myModel.addToMenu(dishesConst[2]); //You can test with more/different dishes

@@ -55,7 +55,7 @@ export function SidebarView(props){
         window.location.hash = "#/details";
     }
     return (
-        <tr key={dish.id}>
+        <tr key={dish.id} data-key={dish.id}>
             <td>
                 <button onClick={onRemoveDishACB}>X</button>
             </td>

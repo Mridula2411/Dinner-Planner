@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { SidebarView } from "/src/views/sidebarView.jsx";
+import { SidebarView } from "/src/views/sidebarView";
 
 const Sidebar = observer(
     function SidebarRender(props) {

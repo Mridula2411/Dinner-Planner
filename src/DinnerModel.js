@@ -1,5 +1,5 @@
-import { searchDishes, getDishDetails } from "/src/dishSource.js";
-import { resolvePromise } from "/src/resolvePromise.js";
+import { searchDishes, getDishDetails } from "/src/dishSource";
+import { resolvePromise } from "/src/resolvePromise";
 
 /* 
    The Model keeps the state of the application (Application State).
@@ -10,6 +10,8 @@ export const model = {
     numberOfGuests: 2,
     dishes: [],
     currentDishId: null,   // null means intentionally empty
+    user: undefined,       // undefined while auth initializes, null when signed out, object when signed in
+    ready: false,
 
     searchParams: {},
     searchResultsPromiseState: {},
