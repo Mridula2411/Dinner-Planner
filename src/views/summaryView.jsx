@@ -9,34 +9,24 @@ export function SummaryView(props){
     }
     
     return (
-            <div className="debug">
-              <button onClick={onBackToSearchACB} style={{float: "right"}}>Back to search!</button>
-
-              {/* TW 1.2 note the syntax: {JS_expression_or_comment} */}
-            Summary for <span title="nr guests">{props.people}</span>{props.people===1? " person" : " persons"}:
-
-
-
-
-              <table>
+            <div className="summaryCard">
+              <button className="secondaryButton summaryBackBtn" onClick={onBackToSearchACB}>Back to search</button>
+              <div className="summaryTitle">
+                Summary for <span title="nr guests">{props.people}</span>{props.people===1? " person" : " persons"}:
+              </div>
+              <table className="summaryTable">
                 <thead>
                   <tr>
                     <th>Name</th>
                     <th>Aisle</th>
                     <th>Quantity</th>
-                    <th>unit</th>
+                    <th>Unit</th>
                   </tr>
                 </thead>
                 <tbody>
-                  { //  <---- in JSX/HTML, with this curly brace, we go back to JavaScript
-                    // Here Array Rendering is used to generate a table row for each element of the ingredients prop (an array) 
-                    sortIngredients(props.ingredients).map(ingredientTableRowCB)
-                  }
+                  {sortIngredients(props.ingredients).map(ingredientTableRowCB)}
                 </tbody>
               </table>
-
-
-
             </div>
     );
     

@@ -16,6 +16,10 @@ export function DetailsView(props) {
 
     return (
         <div>
+            <button className="secondaryButton" onClick={onCancelACB}>
+            Back to search
+            </button>
+
             <h2>{dish.title}</h2>
 
             <img
@@ -62,14 +66,18 @@ export function DetailsView(props) {
             </div>
 
             <div>
+                <p>
+                    After viewing details, use <strong>Back to search</strong> to return to results.
+                </p>
                 <button
+                    className="primaryButton"
                     disabled={props.isDishInMenu}
                     onClick={onAddToMenuACB}
                 >
-                    Add to menu
+                    {props.isDishInMenu ? "Already in menu" : "Add to menu"}
                 </button>
-                <button onClick={onCancelACB}>
-                    Cancel
+                <button className="secondaryButton" onClick={onCancelACB}>
+                    Back to search
                 </button>
             </div>
         </div>

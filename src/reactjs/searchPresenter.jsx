@@ -7,6 +7,7 @@ export const Search = observer(function Search(props){
 
     const model = props.model;
     const promiseState = model.searchResultsPromiseState || {};
+    const loadMorePromiseState = model.loadMorePromiseState || {};
 
     function onTextChangeACB(text) {
         model.setSearchQuery(text);
@@ -27,15 +28,15 @@ export const Search = observer(function Search(props){
     function onScrollACB(evt) {
         const container = evt.target;
         const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 100;
-        
-        if (isNearBottom && promiseState.data && !model.loadMorePromiseState.promise) {
+
+        if (isNearBottom && promiseState.data && !loadMorePromiseState.promise) {
             model.loadMoreResults();
         }
     }
 
     const allResults = promiseState.data ? [
         ...promiseState.data,
-        ...(model.loadMorePromiseState && model.loadMorePromiseState.data ? model.loadMorePromiseState.data : [])
+        ...(loadMorePromiseState.data ? loadMorePromiseState.data : [])
     ] : [];
 
     return (
@@ -61,6 +62,7 @@ export const Search = observer(function Search(props){
                     ? (
                         <SearchResultsView
                             searchResults={allResults}
+                            menuDishIds={Array.isArray(model.dishes) ? model.dishes.map(d => d.id) : []}
                             onDishClick={onDishClickACB}
                         />
                       )
