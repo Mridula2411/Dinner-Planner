@@ -1,66 +1,71 @@
 // initialize Firebase app
-import { initializeApp } from "firebase/app";
-import {getFirestore, doc, setDoc, getDoc, onSnapshot} from "firebase/firestore";
+import { initializeApp, getApps } from "firebase/app";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "firebase/firestore";
 
-// uncomment the following lines when you have your firebaseConfig. Understand what the lines are doing!
-import {firebaseConfig} from "/src/firebaseConfig.js";
-const app= initializeApp(firebaseConfig);
-const db= getFirestore(app);
-window.db= db
+import { firebaseConfig } from "/src/firebaseConfig.js";
+
+const hasFirebaseConfig = Object.values(firebaseConfig).every(Boolean);
+
+const app = hasFirebaseConfig ? (getApps().length ? getApps()[0] : initializeApp(firebaseConfig)) : null;
+const db = app ? getFirestore(app) : null;
+window.db = db;
 
 // make doc and setDoc available at the Console for testing
-window.doc= doc        
-window.setDoc= setDoc
-
+window.doc = doc;
+window.setDoc = setDoc;
 
 /* Replace NN with your TW2_TW3 group number! */
-const COLLECTION="dinnerModelNN";
-const DOCUMENT_NAME="modelData";
-
-// TODO: read the code above
-// TODO: export the function connectToPersistence, it can be empty for starters
+const COLLECTION = "dinnerModelNN";
+const DOCUMENT_NAME = "modelData";
 
 export function connectToPersistence(model, watchFunction) {
     console.log("connectToPersistence called");
+
+    model.ready = true;
+
+    if (!db) {
+        console.log("Firebase not configured; persistence is disabled.");
+        model.numberOfGuests = model.numberOfGuests ?? 2;
+        model.dishes = model.dishes ?? [];
+        model.currentDishId = model.currentDishId ?? null;
+        return;
+    }
+
     // Set model.ready to false to prevent writing while reading (avoid race conditions)
     model.ready = false;
-    
+
     // Create document reference once to reuse for both reading and writing
     const firestoreDoc = doc(db, COLLECTION, DOCUMENT_NAME);
-    
+
     // Flag to track when we're updating from Firestore to avoid triggering saves
     let isUpdatingFromFirestore = false;
-    
+
     // Set up a side effect that persists the model whenever important properties change
     watchFunction(
         function trackModelChangesACB() {
-            // Return array of properties to watch: numberOfGuests, dishes, currentDishId
             return [model.numberOfGuests, model.dishes, model.currentDishId];
         },
         function saveModelToFirestoreACB() {
             console.log("Save triggered, model.ready:", model.ready, "isUpdatingFromFirestore:", isUpdatingFromFirestore);
-            // Only save if model.ready is true AND we're not updating from Firestore
             if (!model.ready || isUpdatingFromFirestore) return;
-            
+
             console.log("Saving to Firestore:", {
                 numberOfGuests: model.numberOfGuests,
                 dishes: model.dishes,
                 currentDishId: model.currentDishId
             });
-            
-            // Save the model to Firestore when the tracked properties change
+
             const result = setDoc(firestoreDoc, {
                 numberOfGuests: model.numberOfGuests,
                 dishes: model.dishes,
                 currentDishId: model.currentDishId
-            }, {merge: true});
+            }, { merge: true });
             if (result && result.catch) {
                 result.catch(console.error);
             }
         }
     );
-    
-    // Read the model from Firestore persistence (happens once when app starts)
+
     getDoc(firestoreDoc)
         .then(function getDocACB(docSnapshot) {
             console.log("Reading from Firestore, document exists:", docSnapshot.exists);
@@ -68,48 +73,40 @@ export function connectToPersistence(model, watchFunction) {
                 const data = docSnapshot.data();
                 console.log("Data from Firestore:", data);
                 if (data) {
-                    // Set the model properties from persisted data, with defaults for missing values
                     model.numberOfGuests = data.numberOfGuests ?? 2;
                     model.dishes = data.dishes ?? [];
                     model.currentDishId = data.currentDishId ?? null;
                 } else {
-                    // Document exists but data is null/undefined, set defaults
                     model.numberOfGuests = 2;
                     model.dishes = [];
                     model.currentDishId = null;
                 }
             } else {
                 console.log("No document found in Firestore, using defaults");
-                // No document exists in cloud, set defaults
                 model.numberOfGuests = 2;
                 model.dishes = [];
                 model.currentDishId = null;
             }
-            // Set model.ready to true as the last thing (model is now ready for normal operation)
             console.log("Setting model.ready to true");
             model.ready = true;
-            
-            // Set up real-time listener for changes from other windows/clients
+
             onSnapshot(firestoreDoc, function onFirestoreUpdateACB(docSnapshot) {
                 if (!docSnapshot.exists) {
                     console.log("Document deleted in Firestore");
                     return;
                 }
-                
+
                 const data = docSnapshot.data();
                 console.log("Real-time update from Firestore:", data);
-                
-                // Set flag to prevent triggering saves during update
+
                 isUpdatingFromFirestore = true;
-                
-                // Update model with new data from Firestore
+
                 if (data) {
                     model.numberOfGuests = data.numberOfGuests ?? model.numberOfGuests;
                     model.dishes = data.dishes ?? model.dishes;
                     model.currentDishId = data.currentDishId ?? model.currentDishId;
                 }
-                
-                // Reset flag after update
+
                 isUpdatingFromFirestore = false;
                 console.log("Real-time update applied to model");
             }, function onErrorACB(error) {
@@ -118,21 +115,12 @@ export function connectToPersistence(model, watchFunction) {
         })
         .catch(function getDocErrorACB(error) {
             console.error("Error reading from Firestore:", error);
-            // Even on error, set defaults and ready to true so the app can work
             model.numberOfGuests = 2;
             model.dishes = [];
             model.currentDishId = null;
             model.ready = true;
         });
 }
-
-
-
-
-
-
-
-
 
 
 
